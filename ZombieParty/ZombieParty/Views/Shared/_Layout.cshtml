@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ZombieParty</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
     <link href="~/fontawesome/css/all.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -60,10 +61,7 @@
         </nav>
     </header>
     <div class="container">
-        @if (!string.IsNullOrWhiteSpace(TempData["Success"] as string))
-        {
-            <div class="alert alert-success">@TempData["Success"]</div>
-        }
+        <partial name="_Notification"/>
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
