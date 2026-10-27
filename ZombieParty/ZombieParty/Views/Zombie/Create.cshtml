@@ -8,7 +8,7 @@
 <div class="row">
     <div class="col-md-6">
         <div class="row p-3 ">
-            <form asp-action="Create">
+            <form asp-action="Create" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group row">
                     <div class="col-4">
@@ -48,7 +48,14 @@
                         <span asp-validation-for="@Model.Zombie.Force" class="text-danger"></span>
                     </div>
                 </div>
-
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="@Model.Zombie.Image" class="col-form-label"></label>
+                    </div>
+                    <div class="col-8">
+                        <input type="file" name="files" onchange="this.nextElementSibling.style.display = 'none'" class="form-control border-0 shadow" multiple />
+                    </div>
+                </div>
                 <div class="form-group row">
                     <div class="col-4">
                         <label asp-for="@Model.Zombie.ZombieTypeId" class="control-label"></label>
@@ -60,6 +67,7 @@
                         <span asp-validation-for="@Model.Zombie.ZombieTypeId" class="text-danger"></span>
                     </div>
                 </div>
+
                 <div class="row form-group">
                     <div class="col-4"> </div>
                     <div class="col-4">
@@ -69,6 +77,8 @@
                     <a class="btn btn-secondary w-100" asp-action="Index"><i class="fa-solid fa-circle-arrow-left"></i>&nbsp;&nbsp;Back to List</a>
                     </div>
                 </div>
+                
+
 
             </form>
         </div>

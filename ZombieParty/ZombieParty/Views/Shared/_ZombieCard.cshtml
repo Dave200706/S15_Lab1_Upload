@@ -5,7 +5,7 @@
         <div class="card-body px-3 pt-3 pb-1 row">
             <p class="card-title text-center text-warning h5"><b>@Model.Name</b></p>
         </div>
-        <img class="card-img-top img-fluid d-block mx-auto mb-3" src="~/images/zombies/GenericZombie.png" alt="Zombie photo" style="width:85%">
+        <img class="card-img-top img-fluid d-block mx-auto mb-3" src="@AppConstants.ImagePathZombies@(string.IsNullOrWhiteSpace(Model.Image) ? AppConstants.ImageGeneric : Model.Image)" alt="Zombie photo" style="width:85%">
         <div class="card-body p-1 px-3 row">
             <div class="col-6" style="padding-left:25px;">
                 <span class="badge p-2 border w-100 btn-dark">@Model.ZombieType?.TypeName</span>

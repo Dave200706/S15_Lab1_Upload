@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ZombieParty.Models;
 using ZombieParty.Models.Data;
+using ZombieParty.Utility;
 using ZombieParty.ViewModels;
 
 namespace ZombieParty.Controllers
@@ -10,10 +11,12 @@ namespace ZombieParty.Controllers
     public class ZombieController : Controller
     {
         private ZombiePartyDbContext _baseDonnees { get; set; }
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ZombieController(ZombiePartyDbContext baseDonnees)
+        public ZombieController(ZombiePartyDbContext baseDonnees, IWebHostEnvironment webHostEnvironment)
         {
             _baseDonnees = baseDonnees;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public async Task<IActionResult> Index()
@@ -77,6 +80,30 @@ namespace ZombieParty.Controllers
             //Si le modèle est valide le zombie est modifié et nous sommes redirigé vers index.
             if (ModelState.IsValid)
             {
+                string webRootPath = _webHostEnvironment.WebRootPath; //Chemin des images de zombies
+                var files = HttpContext.Request.Form.Files; //nouvelle image récupérée
+
+                if (files.Count > 0)
+                {
+                    // Nom fichier généré, unique        
+                    string fileName = Guid.NewGuid().ToString();
+                    // chemin pour les images du zombie
+                    var uploads = Path.Combine(webRootPath, AppConstants.ImagePathZombiesCtrl);
+                    // extraire l'extension du fichier
+                    var extension = Path.GetExtension(files[0].FileName);
+
+                    // Créer un canal pour transférer le fichier 
+                    using (var filesStreams = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
+                    {
+                        files[0].CopyTo(filesStreams);
+                    }
+
+                    // Composer le nom du fichier avec son extension qui sera enregistré dans la BD
+                    // avec le path relatif à partir du Root
+                    // sans le path relatif (le path devra être ajouté dans la View)
+                    zombieVM.Zombie.Image = fileName + extension;
+                }
+
                 _baseDonnees.Zombies.Update(zombieVM.Zombie);
                 await _baseDonnees.SaveChangesAsync();
                 TempData["Success"] = $"Zombie {zombieVM.Zombie.Name} has been modified";
@@ -110,6 +137,30 @@ namespace ZombieParty.Controllers
             //Si le modèle est valide le zombie est ajouté et nous sommes redirigé vers index.
             if (ModelState.IsValid)
             {
+                string webRootPath = _webHostEnvironment.WebRootPath; //Chemin des images de zombies
+                var files = HttpContext.Request.Form.Files; //nouvelle image récupérée
+
+                if (files.Count > 0)
+                {
+                    // Nom fichier généré, unique        
+                    string fileName = Guid.NewGuid().ToString();
+                    // chemin pour les images du zombie
+                    var uploads = Path.Combine(webRootPath, AppConstants.ImagePathZombiesCtrl);
+                    // extraire l'extension du fichier
+                    var extension = Path.GetExtension(files[0].FileName);
+
+                    // Créer un canal pour transférer le fichier 
+                    using (var filesStreams = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
+                    {
+                        files[0].CopyTo(filesStreams);
+                    }
+
+                    // Composer le nom du fichier avec son extension qui sera enregistré dans la BD
+                    // avec le path relatif à partir du Root
+                    // sans le path relatif (le path devra être ajouté dans la View)
+                    zombieVM.Zombie.Image = fileName + extension;
+                }
+
                 await _baseDonnees.Zombies.AddAsync(zombieVM.Zombie);
                 await _baseDonnees.SaveChangesAsync();
                 TempData["Success"] = $"Zombie {zombieVM.Zombie.Name} added";

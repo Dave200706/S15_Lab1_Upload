@@ -18,6 +18,8 @@ namespace ZombieParty.Models
         public int Point { get; set; }
 
         public int Force { get; set; }
+        [ValidateNever]
+        public string Image { get; set; }
 
         // FACULTATIF on peut formellement identifier le champ lien
         // sinon le champ de foreignKey sera auto généré dans la BD
